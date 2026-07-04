@@ -4,6 +4,8 @@ import { computed } from 'vue'
 import { generateOutfitImage } from '@/api/generation'
 import type { OutfitSelection } from '@/types/outfit'
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
+
 const store = useOutfitStore()
 
 const hasItems = computed(() => store.hasSelectedItems())
@@ -36,12 +38,32 @@ function handleClear() {
   }
 }
 
-function handleSave() {
-  if (!hasItems.value) {
-    alert('请先选择单品')
+async function handleSave() {
+  if (!store.resultImageUrl) {
+    alert('请先生成效果图')
     return
   }
-  alert('保存功能即将上线')
+
+  try {
+    const imageUrl = store.resultImageUrl.startsWith('http') 
+      ? store.resultImageUrl 
+      : `${BASE_URL}${store.resultImageUrl}`
+    
+    const response = await fetch(imageUrl)
+    const blob = await response.blob()
+    const url = window.URL.createObjectURL(blob)
+    
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `outfit-${Date.now()}.png`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    window.URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error('Download failed:', error)
+    alert('下载失败')
+  }
 }
 
 async function handleGenerate() {
