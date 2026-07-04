@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { readJson } from '../common/file-db'
+import { readJson, writeJson } from '../common/file-db'
 import type { ClothingItem } from '../common/types'
 
 @Injectable()
@@ -26,5 +26,29 @@ export class ItemsService {
     }
 
     return { code: 0, message: 'ok', data: items }
+  }
+
+  create(itemData: Omit<ClothingItem, 'id'>): { code: number; message: string; data: ClothingItem } {
+    const items = readJson<ClothingItem[]>('items.json')
+    
+    // 生成新ID：找到现有ID的最大值，然后+1
+    let maxId = 0
+    items.forEach(item => {
+      const match = item.id.match(/^item_(\d+)$/)
+      if (match) {
+        const num = parseInt(match[1], 10)
+        if (num > maxId) maxId = num
+      }
+    })
+    
+    const newItem: ClothingItem = {
+      id: `item_${String(maxId + 1).padStart(3, '0')}`,
+      ...itemData
+    }
+    
+    items.push(newItem)
+    writeJson('items.json', items)
+    
+    return { code: 0, message: 'ok', data: newItem }
   }
 }

@@ -4,11 +4,13 @@ import { getItems } from '@/api/items'
 import type { ClothingItem, ClothingCategory } from '@/types/outfit'
 import { categoryLabelMap } from '@/types/outfit'
 import ItemCard from './ItemCard.vue'
+import AddItemDialog from './AddItemDialog.vue'
 
 const items = ref<ClothingItem[]>([])
 const loading = ref(false)
 const keyword = ref('')
 const selectedCategory = ref<ClothingCategory | ''>('')
+const showAddDialog = ref(false)
 
 const categoryOptions = [
   { label: '全部', value: '' },
@@ -46,13 +48,22 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+function handleItemCreated(newItem: ClothingItem) {
+  items.value.push(newItem)
+}
 </script>
 
 <template>
   <div class="item-library">
     <div class="library-header">
       <h3>单品库</h3>
-      <span class="item-count">{{ filteredItems.length }} 件单品</span>
+      <div class="header-actions">
+        <span class="item-count">{{ filteredItems.length }} 件单品</span>
+        <n-button size="small" type="primary" @click="showAddDialog = true">
+          添加服装
+        </n-button>
+      </div>
     </div>
     <div class="library-filters">
       <n-input 
@@ -80,6 +91,7 @@ onMounted(async () => {
         </div>
       </n-spin>
     </div>
+    <AddItemDialog v-model:visible="showAddDialog" @created="handleItemCreated" />
   </div>
 </template>
 
@@ -99,6 +111,11 @@ onMounted(async () => {
     margin: 0;
     font-size: 16px;
     font-weight: 600;
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
   }
   .item-count {
     font-size: 12px;
