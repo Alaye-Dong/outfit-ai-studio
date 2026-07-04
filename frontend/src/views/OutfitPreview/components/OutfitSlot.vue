@@ -1,72 +1,73 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { VueDraggable, type DraggableEvent } from 'vue-draggable-plus'
+import { computed } from 'vue'
+import { useMessage } from 'naive-ui'
 import { useOutfitStore } from '@/stores/outfit'
 import type { SlotDefinition, ClothingItem } from '@/types/outfit'
 
 const props = defineProps<{ slotDef: SlotDefinition }>()
 const store = useOutfitStore()
+const message = useMessage()
 
-const slotItems = ref<ClothingItem[]>([])
-
-// 同步 store 到本地 ref
-watch(
-  () => store.selectedItems[props.slotDef.key],
-  (val) => {
-    if (!val) {
-      slotItems.value = []
-    } else if (Array.isArray(val)) {
-      slotItems.value = [...val]
-    } else {
-      slotItems.value = [val]
-    }
-  },
-  { immediate: true, deep: true }
-)
+const slotItems = computed(() => {
+  const val = store.selectedItems[props.slotDef.key]
+  if (!val) return []
+  if (Array.isArray(val)) return val
+  return [val]
+})
 
 function handleRemove(itemId?: string) {
   store.removeItem(props.slotDef.acceptCategory, itemId)
 }
 
-function onAdd(e: DraggableEvent<ClothingItem>) {
-  const item = e.data
-  if (item.category !== props.slotDef.acceptCategory) {
-    // 分类不匹配，移除刚添加的元素
-    if (e.newIndex !== undefined) {
-      slotItems.value.splice(e.newIndex, 1)
-    }
-    return
+function onDragOver(event: DragEvent) {
+  event.preventDefault()
+  if (event.dataTransfer) {
+    event.dataTransfer.dropEffect = 'copy'
   }
-  // 分类匹配，添加到 store
-  store.addItem(item)
+}
+
+function onDrop(event: DragEvent) {
+  event.preventDefault()
+  if (!event.dataTransfer) return
+
+  try {
+    const item: ClothingItem = JSON.parse(event.dataTransfer.getData('application/json'))
+    if (item.category !== props.slotDef.acceptCategory) {
+      message.warning(`该槽位只接受「${props.slotDef.label}」类别的单品`)
+      return
+    }
+    store.addItem(item)
+    message.success(`已添加 ${item.name}`)
+  } catch {
+    message.error('添加失败')
+  }
 }
 </script>
 
 <template>
   <div class="outfit-slot">
     <div class="slot-label">{{ slotDef.label }}</div>
-    <VueDraggable
-      v-model="slotItems"
-      group="outfit"
-      :animation="150"
-      item-key="id"
+    <div
       class="slot-content"
       :class="{ 'is-empty': slotItems.length === 0 }"
-      @add="onAdd"
+      @dragover="onDragOver"
+      @drop="onDrop"
     >
       <div v-if="slotItems.length === 0" class="slot-empty">
         <span>拖拽或点击添加{{ slotDef.label }}</span>
       </div>
-      <template #item="{ element }">
-        <div class="slot-item">
-          <div class="item-image">
-            <div class="image-placeholder">{{ element.name.charAt(0) }}</div>
-          </div>
-          <span class="item-name">{{ element.name }}</span>
-          <button class="remove-btn" @click="handleRemove(element.id)">×</button>
+      <div 
+        v-for="item in slotItems" 
+        :key="item.id" 
+        class="slot-item"
+      >
+        <div class="item-image">
+          <div class="image-placeholder">{{ item.name.charAt(0) }}</div>
         </div>
-      </template>
-    </VueDraggable>
+        <span class="item-name">{{ item.name }}</span>
+        <button class="remove-btn" @click="handleRemove(item.id)">×</button>
+      </div>
+    </div>
   </div>
 </template>
 

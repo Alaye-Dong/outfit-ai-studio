@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { VueDraggable } from 'vue-draggable-plus'
 import { getItems } from '@/api/items'
 import type { ClothingItem, ClothingCategory } from '@/types/outfit'
 import { categoryLabelMap } from '@/types/outfit'
@@ -21,7 +20,7 @@ const categoryOptions = [
   })),
 ]
 
-const filteredIds = computed(() => {
+const filteredItems = computed(() => {
   let result = items.value
 
   if (keyword.value) {
@@ -36,7 +35,7 @@ const filteredIds = computed(() => {
     result = result.filter(i => i.category === selectedCategory.value)
   }
 
-  return new Set(result.map(i => i.id))
+  return result
 })
 
 onMounted(async () => {
@@ -53,6 +52,13 @@ onMounted(async () => {
 function handleItemCreated(newItem: ClothingItem) {
   items.value.push(newItem)
 }
+
+function onDragStart(event: DragEvent, item: ClothingItem) {
+  if (event.dataTransfer) {
+    event.dataTransfer.setData('application/json', JSON.stringify(item))
+    event.dataTransfer.effectAllowed = 'copy'
+  }
+}
 </script>
 
 <template>
@@ -60,7 +66,7 @@ function handleItemCreated(newItem: ClothingItem) {
     <div class="library-header">
       <h3>单品库</h3>
       <div class="header-actions">
-        <span class="item-count">{{ filteredIds.size }} 件单品</span>
+        <span class="item-count">{{ filteredItems.length }} 件单品</span>
         <n-button size="small" type="primary" @click="showAddDialog = true">
           添加服装
         </n-button>
@@ -83,20 +89,17 @@ function handleItemCreated(newItem: ClothingItem) {
     </div>
     <div class="library-content">
       <n-spin :show="loading">
-        <VueDraggable
-          v-model="items"
-          :group="{ name: 'outfit', pull: 'clone', put: false }"
-          :sort="false"
-          :animation="150"
-          item-key="id"
-          class="item-list"
-        >
-          <template #item="{ element }">
-            <div v-show="filteredIds.has(element.id)">
-              <ItemCard :item="element" />
-            </div>
-          </template>
-        </VueDraggable>
+        <div class="item-list">
+          <div
+            v-for="item in filteredItems"
+            :key="item.id"
+            class="draggable-item"
+            draggable="true"
+            @dragstart="onDragStart($event, item)"
+          >
+            <ItemCard :item="item" />
+          </div>
+        </div>
       </n-spin>
     </div>
     <AddItemDialog v-model:visible="showAddDialog" @created="handleItemCreated" />
@@ -146,5 +149,11 @@ function handleItemCreated(newItem: ClothingItem) {
   display: flex;
   flex-direction: column;
   gap: var(--gap-sm);
+}
+.draggable-item {
+  cursor: grab;
+  &:active {
+    cursor: grabbing;
+  }
 }
 </style>
