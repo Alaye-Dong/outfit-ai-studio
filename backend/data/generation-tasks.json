@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "id": "task_001",
+    "prompt": "请生成一张真人模特全身穿搭图。模特正面站立，全身构图，背景为简洁摄影棚。真实电商服装展示风格，高清质感。模特穿着：棕色棕色格纹夹克、灰色灰色长款半身裙、黑色黑色厚底鞋。整体风格自然、日常、适合服装搭配预览。",
+    "imageUrl": "/generated/fallback-003.png",
+    "isFallback": true,
+    "createdAt": "2026-07-04T15:12:28.168Z"
+  },
+  {
+    "id": "task_002",
+    "prompt": "请生成一张真人模特全身穿搭图。模特正面站立，全身构图，背景为简洁摄影棚。真实电商服装展示风格，高清质感。模特穿着：棕色棕色格纹夹克、灰色灰色长款半身裙、黑色黑色厚底鞋。整体风格自然、日常、适合服装搭配预览。",
+    "imageUrl": "/generated/fallback-001.png",
+    "isFallback": true,
+    "createdAt": "2026-07-04T15:13:23.364Z"
+  },
+  {
+    "id": "task_003",
+    "prompt": "请生成一张真人模特全身穿搭图。模特正面站立，全身构图，背景为简洁摄影棚。真实电商服装展示风格，高清质感。模特穿着：棕色棕色格纹夹克、灰色灰色长款半身裙、黑色黑色厚底鞋。整体风格自然、日常、适合服装搭配预览。",
+    "imageUrl": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/1d/7a/20260704/3a46c997/786d1ded-2e62-4ee0-9fbb-445e97af6472_0.png?Expires=1783264790&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=GWexef7x%2FC%2B4BGrOmzJqnPeq%2BHU%3D",
+    "isFallback": false,
+    "createdAt": "2026-07-04T15:19:51.330Z"
+  }
+]

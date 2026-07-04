@@ -20,12 +20,16 @@ export class BailianProvider {
   private readonly useMock = process.env.AI_IMAGE_USE_MOCK === 'true'
 
   private get baseUrl(): string {
-    return `https://${this.workspaceId}.cn-beijing.maas.aliyuncs.com/api/v1`
+    // 如果有 workspaceId，使用工作空间格式；否则使用通用格式
+    if (this.workspaceId) {
+      return `https://${this.workspaceId}.cn-beijing.maas.aliyuncs.com/api/v1`
+    }
+    return 'https://dashscope.aliyuncs.com/api/v1'
   }
 
   async generate(input: GenerateImageInput): Promise<GenerateImageOutput> {
-    if (this.useMock || !this.apiKey || !this.workspaceId) {
-      console.log('[BailianProvider] Using mock/fallback mode')
+    if (this.useMock || !this.apiKey) {
+      console.log('[BailianProvider] Using mock/fallback mode', { useMock: this.useMock, hasApiKey: !!this.apiKey })
       return this.getFallbackImage()
     }
 
@@ -44,6 +48,7 @@ export class BailianProvider {
 
   private async generateSync(input: GenerateImageInput): Promise<GenerateImageOutput> {
     const url = `${this.baseUrl}/services/aigc/multimodal-generation/generation`
+    console.log('[BailianProvider] Calling sync API:', url)
 
     const body: Record<string, unknown> = {
       model: this.model,
@@ -77,6 +82,8 @@ export class BailianProvider {
     }
 
     const result = await response.json()
+    console.log('[BailianProvider] Sync response:', JSON.stringify(result).substring(0, 500))
+    
     const imageUrl = result.output?.choices?.[0]?.message?.content?.[0]?.image
 
     if (!imageUrl) {
@@ -88,13 +95,14 @@ export class BailianProvider {
 
   private async generateAsync(input: GenerateImageInput): Promise<GenerateImageOutput> {
     const submitUrl = `${this.baseUrl}/services/aigc/image-generation/generation`
+    console.log('[BailianProvider] Calling async API:', submitUrl)
 
     const body = {
       model: this.model,
       input: {
         messages: [{ role: 'user', content: [{ text: input.prompt }] }],
       },
-      parameters: { size: '1024*1024', n: 1 },
+      parameters: { size: '1024*1024', n: 1, watermark: false },
     }
 
     const submitRes = await fetch(submitUrl, {
@@ -108,7 +116,8 @@ export class BailianProvider {
     })
 
     if (!submitRes.ok) {
-      throw new Error(`Async submit error ${submitRes.status}`)
+      const errorText = await submitRes.text()
+      throw new Error(`Async submit error ${submitRes.status}: ${errorText}`)
     }
 
     const submitData = await submitRes.json()
@@ -118,9 +127,11 @@ export class BailianProvider {
       throw new Error('No task_id in async submit response')
     }
 
+    console.log('[BailianProvider] Async task created:', taskId)
+
     const pollUrl = `${this.baseUrl}/tasks/${taskId}`
-    for (let i = 0; i < 30; i++) {
-      await new Promise(resolve => setTimeout(resolve, 3000))
+    for (let i = 0; i < 60; i++) {
+      await new Promise(resolve => setTimeout(resolve, 2000))
 
       const pollRes = await fetch(pollUrl, {
         headers: { 'Authorization': `Bearer ${this.apiKey}` },
@@ -130,11 +141,12 @@ export class BailianProvider {
 
       const pollData = await pollRes.json()
       const status = pollData.output?.task_status
+      console.log(`[BailianProvider] Poll ${i + 1}: status=${status}`)
 
       if (status === 'SUCCEEDED') {
         const imageUrl =
-          pollData.output?.choices?.[0]?.message?.content?.[0]?.image ||
-          pollData.output?.results?.[0]?.url
+          pollData.output?.results?.[0]?.url ||
+          pollData.output?.choices?.[0]?.message?.content?.[0]?.image
 
         if (imageUrl) {
           return { imageUrl, isFallback: false, raw: pollData }
