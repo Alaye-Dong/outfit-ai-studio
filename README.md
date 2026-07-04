@@ -2,12 +2,18 @@
 
 一个简易的 AI 穿搭搭配工具 Demo，支持从单品库选择服装、拖拽搭配、AI 生成穿搭效果图。
 
+## 效果预览
+
+![AI 穿搭预演工具效果](docs/images/2026-07-04%20234213.png)
+
 ## 功能特性
 
 - **单品库区**：展示服装单品，支持搜索和分类筛选
 - **拖拽搭配区**：固定槽位式搭配，支持拖拽和点击添加
 - **穿搭成果展示区**：展示 AI 生成的穿搭效果图
-- **AI 图像生成**：对接阿里云百炼 API，生成真实穿搭效果图
+- **AI 图像生成**：对接阿里云百炼 API（wan2.7-image），生成真实穿搭效果图
+- **单品管理**：支持添加、编辑单品，上传本地图片
+- **图片下载**：支持下载生成的穿搭效果图
 
 ## 技术栈
 
@@ -21,8 +27,9 @@
 
 ### 后端
 - NestJS + TypeScript
+- Multer（文件上传）
 - 本地 JSON 数据存储
-- 阿里云百炼 API（图像生成）
+- 阿里云百炼 API（wan2.7-image 图像生成）
 
 ## 项目结构
 
@@ -37,7 +44,9 @@ outfit-ai-studio/
 │   │   │   │   ├── OutfitCanvas.vue  # 搭配区
 │   │   │   │   ├── OutfitSlot.vue    # 搭配槽位
 │   │   │   │   ├── ResultPreview.vue # 成果展示
-│   │   │   │   └── TopActions.vue    # 顶部操作
+│   │   │   │   ├── TopActions.vue    # 顶部操作
+│   │   │   │   ├── AddItemDialog.vue # 添加单品对话框
+│   │   │   │   └── EditItemDialog.vue # 编辑单品对话框
 │   │   │   └── index.vue
 │   │   ├── stores/outfit.ts       # Pinia 状态管理
 │   │   ├── api/                   # API 接口
@@ -48,9 +57,11 @@ outfit-ai-studio/
 │   │   ├── items/       # 单品模块
 │   │   ├── outfits/     # 搭配模块
 │   │   ├── generation/  # AI 生成模块
+│   │   ├── upload/      # 文件上传模块
 │   │   └── common/      # 公共工具
 │   ├── data/            # 本地 JSON 数据
-│   └── public/          # 静态资源
+│   └── public/          # 静态资源（含 uploads 目录）
+├── docs/              # 文档和截图
 └── README.md
 ```
 
@@ -58,18 +69,18 @@ outfit-ai-studio/
 
 ### 环境要求
 - Node.js 18+
-- npm 9+
+- pnpm 8+
 
 ### 1. 安装依赖
 
 ```bash
 # 前端
 cd frontend
-npm install
+pnpm install
 
 # 后端
 cd backend
-npm install
+pnpm install
 ```
 
 ### 2. 配置环境变量
@@ -77,13 +88,13 @@ npm install
 后端 `.env` 文件：
 
 ```env
-# 阿里云百炼 API（可选，不配置则使用兜底图）
+# 阿里云百炼 API
 BAILIAN_API_KEY=sk-your-api-key-here
 BAILIAN_WORKSPACE_ID=your-workspace-id
 BAILIAN_MODEL=wan2.7-image
 
-# Mock 模式开关
-AI_IMAGE_USE_MOCK=true
+# Mock 模式开关（未配置 API Key 时自动启用）
+AI_IMAGE_USE_MOCK=false
 ```
 
 ### 3. 启动服务
@@ -91,11 +102,11 @@ AI_IMAGE_USE_MOCK=true
 ```bash
 # 启动后端（端口 3000）
 cd backend
-npm run start:dev
+pnpm run start:dev
 
 # 启动前端（端口 5173）
 cd frontend
-npm run dev
+pnpm run dev
 ```
 
 ### 4. 访问应用
@@ -117,10 +128,23 @@ GET /api/items
 Query: keyword, category, season, occasion
 ```
 
-### 保存搭配
+### 创建单品
 ```
-POST /api/outfits
-Body: { name: string, items: OutfitSelection }
+POST /api/items
+Body: { name, category, color, season, occasion, imageUrl, note }
+```
+
+### 更新单品
+```
+PUT /api/items/:id
+Body: { name?, category?, color?, season?, occasion?, imageUrl?, note? }
+```
+
+### 上传图片
+```
+POST /api/upload/image
+Content-Type: multipart/form-data
+Body: file (图片文件)
 ```
 
 ### 生成穿搭图
@@ -131,14 +155,15 @@ Body: { items: OutfitSelection, prompt?: string }
 
 ## 数据
 
-- **单品数据**：`backend/data/items.json`（25 个预置单品）
+- **单品数据**：`backend/data/items.json`（27 个预置单品）
 - **搭配记录**：`backend/data/outfits.json`
 - **生成记录**：`backend/data/generation-tasks.json`
+- **上传图片**：`backend/public/uploads/`
 
 ## 注意事项
 
 1. **AI 图像生成**：需要配置阿里云百炼 API Key，否则使用兜底图
-2. **图片资源**：Demo 使用占位图，实际使用时可替换为真实图片
+2. **图片上传**：支持 jpg/jpeg/png/gif/webp 格式，最大 5MB
 3. **浏览器支持**：推荐 Chrome、Edge、Firefox 最新版本
 
 ## 开发计划
@@ -149,6 +174,10 @@ Body: { items: OutfitSelection, prompt?: string }
 - [x] Phase 3: 交互联调（拖拽 + 搜索）
 - [x] Phase 4: AI 生成闭环
 - [x] Phase 5: 打磨与兜底
+- [x] 添加单品功能
+- [x] 编辑单品功能
+- [x] 图片上传功能
+- [x] 图片下载功能
 
 ## License
 
