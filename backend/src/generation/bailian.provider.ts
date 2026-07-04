@@ -28,17 +28,32 @@ export class BailianProvider {
   }
 
   async generate(input: GenerateImageInput): Promise<GenerateImageOutput> {
+    console.log('[BailianProvider] Config check:', { 
+      useMock: this.useMock, 
+      hasApiKey: !!this.apiKey, 
+      apiKeyLength: this.apiKey.length,
+      apiKeyPrefix: this.apiKey.substring(0, 10) + '...',
+      model: this.model,
+      baseUrl: this.baseUrl
+    })
+    
     if (this.useMock || !this.apiKey) {
-      console.log('[BailianProvider] Using mock/fallback mode', { useMock: this.useMock, hasApiKey: !!this.apiKey })
+      console.log('[BailianProvider] Using mock/fallback mode')
       return this.getFallbackImage()
     }
 
     try {
-      return await this.generateSync(input)
+      console.log('[BailianProvider] Attempting sync call...')
+      const result = await this.generateSync(input)
+      console.log('[BailianProvider] Sync call succeeded:', result.imageUrl)
+      return result
     } catch (syncError) {
-      console.warn('[BailianProvider] Sync call failed, trying async:', syncError)
+      console.warn('[BailianProvider] Sync call failed:', syncError)
       try {
-        return await this.generateAsync(input)
+        console.log('[BailianProvider] Attempting async call...')
+        const result = await this.generateAsync(input)
+        console.log('[BailianProvider] Async call succeeded:', result.imageUrl)
+        return result
       } catch (asyncError) {
         console.error('[BailianProvider] Both sync and async failed:', asyncError)
         return this.getFallbackImage()
@@ -50,13 +65,23 @@ export class BailianProvider {
     const url = `${this.baseUrl}/services/aigc/multimodal-generation/generation`
     console.log('[BailianProvider] Calling sync API:', url)
 
+    // 构建消息内容
+    const content: Array<Record<string, string>> = [{ text: input.prompt }]
+    
+    // 如果有参考图片，添加到内容中
+    if (input.referenceImages && input.referenceImages.length > 0) {
+      for (const imageUrl of input.referenceImages) {
+        content.push({ image: imageUrl })
+      }
+    }
+
     const body: Record<string, unknown> = {
       model: this.model,
       input: {
         messages: [
           {
             role: 'user',
-            content: [{ text: input.prompt }],
+            content,
           },
         ],
       },
@@ -66,6 +91,8 @@ export class BailianProvider {
         watermark: false,
       },
     }
+
+    console.log('[BailianProvider] Request body:', JSON.stringify(body).substring(0, 1000))
 
     const response = await fetch(url, {
       method: 'POST',
@@ -97,13 +124,25 @@ export class BailianProvider {
     const submitUrl = `${this.baseUrl}/services/aigc/image-generation/generation`
     console.log('[BailianProvider] Calling async API:', submitUrl)
 
+    // 构建消息内容
+    const content: Array<Record<string, string>> = [{ text: input.prompt }]
+    
+    // 如果有参考图片，添加到内容中
+    if (input.referenceImages && input.referenceImages.length > 0) {
+      for (const imageUrl of input.referenceImages) {
+        content.push({ image: imageUrl })
+      }
+    }
+
     const body = {
       model: this.model,
       input: {
-        messages: [{ role: 'user', content: [{ text: input.prompt }] }],
+        messages: [{ role: 'user', content }],
       },
       parameters: { size: '1024*1024', n: 1, watermark: false },
     }
+
+    console.log('[BailianProvider] Async request body:', JSON.stringify(body).substring(0, 1000))
 
     const submitRes = await fetch(submitUrl, {
       method: 'POST',

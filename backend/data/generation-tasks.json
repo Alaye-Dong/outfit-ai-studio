@@ -19,5 +19,33 @@
     "imageUrl": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/1d/7a/20260704/3a46c997/786d1ded-2e62-4ee0-9fbb-445e97af6472_0.png?Expires=1783264790&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=GWexef7x%2FC%2B4BGrOmzJqnPeq%2BHU%3D",
     "isFallback": false,
     "createdAt": "2026-07-04T15:19:51.330Z"
+  },
+  {
+    "id": "task_004",
+    "prompt": "请生成一张真人模特全身穿搭图。模特正面站立，全身构图，背景为简洁摄影棚。真实电商服装展示风格，高清质感。模特穿着：棕色棕色短靴、红色红色棉服外套、蓝色蓝色牛仔裤。整体风格自然、日常、适合服装搭配预览。",
+    "imageUrl": "/generated/fallback-002.png",
+    "isFallback": true,
+    "createdAt": "2026-07-04T15:28:57.660Z"
+  },
+  {
+    "id": "task_005",
+    "prompt": "请生成一张真人模特全身穿搭图。模特正面站立，全身构图，背景为简洁摄影棚。真实电商服装展示风格，高清质感。模特穿着：棕色棕色短靴、红色红色棉服外套、蓝色蓝色牛仔裤。整体风格自然、日常、适合服装搭配预览。",
+    "imageUrl": "/generated/fallback-001.png",
+    "isFallback": true,
+    "createdAt": "2026-07-04T15:33:27.272Z"
+  },
+  {
+    "id": "task_006",
+    "prompt": "请生成一张真人模特全身穿搭图。模特正面站立，全身构图，背景为简洁摄影棚。真实电商服装展示风格，高清质感。模特穿着：红色红色棉服外套、蓝色蓝色牛仔裤、棕色棕色短靴。整体风格自然、日常、适合服装搭配预览。",
+    "imageUrl": "/generated/fallback-001.png",
+    "isFallback": true,
+    "createdAt": "2026-07-04T15:36:06.425Z"
+  },
+  {
+    "id": "task_007",
+    "prompt": "请生成一张真人模特全身穿搭图。模特正面站立，全身构图，背景为简洁摄影棚。真实电商服装展示风格，高清质感。模特穿着：红色红色棉服外套、蓝色蓝色牛仔裤、棕色棕色短靴。整体风格自然、日常、适合服装搭配预览。",
+    "imageUrl": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/1d/c7/20260704/edd52a7a/6857e9b0-89b0-4feb-8266-8e3341fba7a6_0.png?Expires=1783266097&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=qyS9334apgS7F0G6sK8EOvIY%2F1k%3D",
+    "isFallback": false,
+    "createdAt": "2026-07-04T15:41:38.611Z"
   }
 ]

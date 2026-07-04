@@ -61,10 +61,15 @@ async function handleGenerate() {
     })
     store.setGenerateSuccess(result.imageUrl, result.isFallback)
     if (result.isFallback) {
-      alert('当前展示的是预生成 Demo 效果图')
+      console.warn('[Generation] Using fallback image, API call failed')
+      alert('AI 接口调用失败，当前展示的是预生成 Demo 效果图。请检查后端日志。')
+    } else {
+      console.log('[Generation] Success, imageUrl:', result.imageUrl)
     }
   } catch (error: any) {
+    console.error('[Generation] Error:', error)
     store.setGenerateFailed(error.message || '生成失败，请稍后重试')
+    alert('生成失败: ' + (error.message || '请稍后重试'))
   }
 }
 </script>
