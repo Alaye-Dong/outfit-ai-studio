@@ -466,5 +466,31 @@
     ],
     "imageUrl": "/uploads/denim-dress.png",
     "note": "休闲牛仔背带裙"
+  },
+  {
+    "id": "item_028",
+    "name": "yf1",
+    "category": "top",
+    "color": "红",
+    "season": [
+      "春季"
+    ],
+    "occasion": [
+      "日常"
+    ],
+    "imageUrl": "/uploads/yf1.png"
+  },
+  {
+    "id": "item_029",
+    "name": "皮鞋",
+    "category": "shoes",
+    "color": "褐色",
+    "season": [
+      "春季"
+    ],
+    "occasion": [
+      "日常"
+    ],
+    "imageUrl": "/uploads/1783170825796-137548467.jpg"
   }
 ]

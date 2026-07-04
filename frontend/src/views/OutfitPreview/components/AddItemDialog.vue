@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useMessage } from 'naive-ui'
-import type { FormInst, FormRules } from 'naive-ui'
+import type { FormInst, FormRules, UploadFileInfo } from 'naive-ui'
 import { createItem } from '@/api/items'
+import { uploadImage } from '@/api/upload'
 import type { ClothingItem, ClothingCategory } from '@/types/outfit'
 import { categoryLabelMap } from '@/types/outfit'
 
@@ -14,6 +15,8 @@ const emit = defineEmits<{
 const message = useMessage()
 const formRef = ref<FormInst | null>(null)
 const loading = ref(false)
+const uploading = ref(false)
+const uploadedUrl = ref('')
 
 const categoryOptions = Object.entries(categoryLabelMap).map(([value, label]) => ({
   label,
@@ -77,6 +80,24 @@ function resetForm() {
   formData.occasion = []
   formData.imageUrl = ''
   formData.note = ''
+  uploadedUrl.value = ''
+}
+
+async function handleUpload({ file }: { file: UploadFileInfo }) {
+  if (!file.file) return
+
+  uploading.value = true
+  try {
+    const result = await uploadImage(file.file)
+    uploadedUrl.value = result.url
+    formData.imageUrl = result.url
+    message.success('图片上传成功')
+  } catch (error) {
+    message.error('图片上传失败')
+    console.error('Upload failed:', error)
+  } finally {
+    uploading.value = false
+  }
 }
 
 async function handleSubmit() {
@@ -168,8 +189,19 @@ function handleCancel() {
         />
       </n-form-item>
 
-      <n-form-item label="图片URL" path="imageUrl">
-        <n-input v-model:value="formData.imageUrl" placeholder="请输入图片URL（可选）" />
+      <n-form-item label="图片" path="imageUrl">
+        <n-upload
+          :max="1"
+          accept="image/*"
+          :custom-request="handleUpload"
+          :disabled="uploading"
+          list-type="image-card"
+        >
+          <n-button :loading="uploading">选择图片</n-button>
+        </n-upload>
+        <div v-if="uploadedUrl" class="uploaded-preview">
+          <img :src="uploadedUrl" alt="预览" style="max-width: 100px; max-height: 100px; margin-top: 8px;" />
+        </div>
       </n-form-item>
 
       <n-form-item label="备注" path="note">

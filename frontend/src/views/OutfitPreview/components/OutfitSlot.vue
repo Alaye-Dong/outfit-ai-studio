@@ -1,42 +1,72 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, watch } from 'vue'
+import { VueDraggable, type DraggableEvent } from 'vue-draggable-plus'
 import { useOutfitStore } from '@/stores/outfit'
-import type { SlotDefinition } from '@/types/outfit'
+import type { SlotDefinition, ClothingItem } from '@/types/outfit'
 
 const props = defineProps<{ slotDef: SlotDefinition }>()
 const store = useOutfitStore()
 
-const slotItems = computed(() => {
-  const val = store.selectedItems[props.slotDef.key]
-  if (!val) return []
-  if (Array.isArray(val)) return val
-  return [val]
-})
+const slotItems = ref<ClothingItem[]>([])
+
+// 同步 store 到本地 ref
+watch(
+  () => store.selectedItems[props.slotDef.key],
+  (val) => {
+    if (!val) {
+      slotItems.value = []
+    } else if (Array.isArray(val)) {
+      slotItems.value = [...val]
+    } else {
+      slotItems.value = [val]
+    }
+  },
+  { immediate: true, deep: true }
+)
 
 function handleRemove(itemId?: string) {
   store.removeItem(props.slotDef.acceptCategory, itemId)
+}
+
+function onAdd(e: DraggableEvent<ClothingItem>) {
+  const item = e.data
+  if (item.category !== props.slotDef.acceptCategory) {
+    // 分类不匹配，移除刚添加的元素
+    if (e.newIndex !== undefined) {
+      slotItems.value.splice(e.newIndex, 1)
+    }
+    return
+  }
+  // 分类匹配，添加到 store
+  store.addItem(item)
 }
 </script>
 
 <template>
   <div class="outfit-slot">
     <div class="slot-label">{{ slotDef.label }}</div>
-    <div class="slot-content" :class="{ 'is-empty': slotItems.length === 0 }">
+    <VueDraggable
+      v-model="slotItems"
+      group="outfit"
+      :animation="150"
+      item-key="id"
+      class="slot-content"
+      :class="{ 'is-empty': slotItems.length === 0 }"
+      @add="onAdd"
+    >
       <div v-if="slotItems.length === 0" class="slot-empty">
         <span>拖拽或点击添加{{ slotDef.label }}</span>
       </div>
-      <div 
-        v-for="item in slotItems" 
-        :key="item.id" 
-        class="slot-item"
-      >
-        <div class="item-image">
-          <div class="image-placeholder">{{ item.name.charAt(0) }}</div>
+      <template #item="{ element }">
+        <div class="slot-item">
+          <div class="item-image">
+            <div class="image-placeholder">{{ element.name.charAt(0) }}</div>
+          </div>
+          <span class="item-name">{{ element.name }}</span>
+          <button class="remove-btn" @click="handleRemove(element.id)">×</button>
         </div>
-        <span class="item-name">{{ item.name }}</span>
-        <button class="remove-btn" @click="handleRemove(item.id)">×</button>
-      </div>
-    </div>
+      </template>
+    </VueDraggable>
   </div>
 </template>
 

@@ -4,6 +4,7 @@ import { join } from 'path'
 import { ItemsModule } from './items/items.module'
 import { OutfitsModule } from './outfits/outfits.module'
 import { GenerationModule } from './generation/generation.module'
+import { UploadModule } from './upload/upload.module'
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { GenerationModule } from './generation/generation.module'
     ItemsModule,
     OutfitsModule,
     GenerationModule,
+    UploadModule,
   ],
 })
 export class AppModule {}
