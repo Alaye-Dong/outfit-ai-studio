@@ -5,12 +5,15 @@ import type { ClothingItem, ClothingCategory } from '@/types/outfit'
 import { categoryLabelMap } from '@/types/outfit'
 import ItemCard from './ItemCard.vue'
 import AddItemDialog from './AddItemDialog.vue'
+import EditItemDialog from './EditItemDialog.vue'
 
 const items = ref<ClothingItem[]>([])
 const loading = ref(false)
 const keyword = ref('')
 const selectedCategory = ref<ClothingCategory | ''>('')
 const showAddDialog = ref(false)
+const showEditDialog = ref(false)
+const editingItem = ref<ClothingItem | null>(null)
 
 const categoryOptions = [
   { label: '全部', value: '' },
@@ -51,6 +54,18 @@ onMounted(async () => {
 
 function handleItemCreated(newItem: ClothingItem) {
   items.value.push(newItem)
+}
+
+function handleEditItem(item: ClothingItem) {
+  editingItem.value = item
+  showEditDialog.value = true
+}
+
+function handleItemUpdated(updatedItem: ClothingItem) {
+  const index = items.value.findIndex(i => i.id === updatedItem.id)
+  if (index !== -1) {
+    items.value[index] = updatedItem
+  }
 }
 
 function onDragStart(event: DragEvent, item: ClothingItem) {
@@ -97,12 +112,17 @@ function onDragStart(event: DragEvent, item: ClothingItem) {
             draggable="true"
             @dragstart="onDragStart($event, item)"
           >
-            <ItemCard :item="item" />
+            <ItemCard :item="item" @edit="handleEditItem" />
           </div>
         </div>
       </n-spin>
     </div>
     <AddItemDialog v-model:visible="showAddDialog" @created="handleItemCreated" />
+    <EditItemDialog 
+      v-model:visible="showEditDialog" 
+      :item="editingItem" 
+      @updated="handleItemUpdated" 
+    />
   </div>
 </template>
 

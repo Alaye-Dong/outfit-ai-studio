@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, HttpCode, HttpStatus } from '@nestjs/common'
+import { Controller, Get, Post, Put, Body, Param, Query, HttpCode, HttpStatus } from '@nestjs/common'
 import { ItemsService } from './items.service'
 import type { ClothingItem } from '../common/types'
 
@@ -15,5 +15,10 @@ export class ItemsController {
   @HttpCode(HttpStatus.CREATED)
   create(@Body() itemData: Omit<ClothingItem, 'id'>) {
     return this.itemsService.create(itemData)
+  }
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() itemData: Partial<Omit<ClothingItem, 'id'>>) {
+    return this.itemsService.update(id, itemData)
   }
 }

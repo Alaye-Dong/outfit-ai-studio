@@ -4,10 +4,17 @@ import { categoryLabelMap } from '@/types/outfit'
 import { useOutfitStore } from '@/stores/outfit'
 
 const props = defineProps<{ item: ClothingItem }>()
+const emit = defineEmits<{
+  (e: 'edit', item: ClothingItem): void
+}>()
 const store = useOutfitStore()
 
 function handleAdd() {
   store.addItem(props.item)
+}
+
+function handleEdit() {
+  emit('edit', props.item)
 }
 </script>
 
@@ -25,7 +32,10 @@ function handleAdd() {
         <n-tag size="small" type="info" :bordered="false">{{ categoryLabelMap[item.category] }}</n-tag>
       </div>
     </div>
-    <n-button size="tiny" type="primary" @click="handleAdd">加入搭配</n-button>
+    <div class="item-actions">
+      <n-button size="tiny" @click="handleEdit">编辑</n-button>
+      <n-button size="tiny" type="primary" @click="handleAdd">加入搭配</n-button>
+    </div>
   </div>
 </template>
 
@@ -86,5 +96,10 @@ function handleAdd() {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
+}
+.item-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
 }
 </style>

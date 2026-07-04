@@ -51,4 +51,18 @@ export class ItemsService {
     
     return { code: 0, message: 'ok', data: newItem }
   }
+
+  update(id: string, itemData: Partial<Omit<ClothingItem, 'id'>>): { code: number; message: string; data: ClothingItem | null } {
+    const items = readJson<ClothingItem[]>('items.json')
+    const index = items.findIndex(i => i.id === id)
+    
+    if (index === -1) {
+      return { code: 1, message: '单品不存在', data: null }
+    }
+    
+    items[index] = { ...items[index], ...itemData }
+    writeJson('items.json', items)
+    
+    return { code: 0, message: 'ok', data: items[index] }
+  }
 }
