@@ -1,13 +1,27 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { ClothingItem } from '@/types/outfit'
 import { categoryLabelMap } from '@/types/outfit'
 import { useOutfitStore } from '@/stores/outfit'
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
 
 const props = defineProps<{ item: ClothingItem }>()
 const emit = defineEmits<{
   (e: 'edit', item: ClothingItem): void
 }>()
 const store = useOutfitStore()
+
+const imageUrl = computed(() => {
+  if (!props.item.imageUrl) return ''
+  return props.item.imageUrl.startsWith('http') 
+    ? props.item.imageUrl 
+    : `${BASE_URL}${props.item.imageUrl}`
+})
+
+const hasImage = computed(() => {
+  return props.item.imageUrl && !props.item.imageUrl.includes('placeholder')
+})
 
 function handleAdd() {
   store.addItem(props.item)
@@ -21,7 +35,8 @@ function handleEdit() {
 <template>
   <div class="item-card" :data-category="item.category">
     <div class="item-image">
-      <div class="image-placeholder">
+      <img v-if="hasImage" :src="imageUrl" :alt="item.name" class="image-real" />
+      <div v-else class="image-placeholder">
         {{ item.name.charAt(0) }}
       </div>
     </div>
@@ -77,6 +92,11 @@ function handleEdit() {
   color: var(--color-primary);
   font-size: 20px;
   font-weight: 600;
+}
+.image-real {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .item-info {
   flex: 1;

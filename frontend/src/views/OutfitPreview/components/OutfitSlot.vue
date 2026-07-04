@@ -4,6 +4,8 @@ import { useMessage } from 'naive-ui'
 import { useOutfitStore } from '@/stores/outfit'
 import type { SlotDefinition, ClothingItem } from '@/types/outfit'
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
+
 const props = defineProps<{ slotDef: SlotDefinition }>()
 const store = useOutfitStore()
 const message = useMessage()
@@ -14,6 +16,17 @@ const slotItems = computed(() => {
   if (Array.isArray(val)) return val
   return [val]
 })
+
+function getImageUrl(item: ClothingItem): string {
+  if (!item.imageUrl) return ''
+  return item.imageUrl.startsWith('http') 
+    ? item.imageUrl 
+    : `${BASE_URL}${item.imageUrl}`
+}
+
+function hasImage(item: ClothingItem): boolean {
+  return !!item.imageUrl && !item.imageUrl.includes('placeholder')
+}
 
 function handleRemove(itemId?: string) {
   store.removeItem(props.slotDef.acceptCategory, itemId)
@@ -62,7 +75,8 @@ function onDrop(event: DragEvent) {
         class="slot-item"
       >
         <div class="item-image">
-          <div class="image-placeholder">{{ item.name.charAt(0) }}</div>
+          <img v-if="hasImage(item)" :src="getImageUrl(item)" :alt="item.name" class="image-real" />
+          <div v-else class="image-placeholder">{{ item.name.charAt(0) }}</div>
         </div>
         <span class="item-name">{{ item.name }}</span>
         <button class="remove-btn" @click="handleRemove(item.id)">×</button>
@@ -134,6 +148,11 @@ function onDrop(event: DragEvent) {
   color: var(--color-primary);
   font-size: 16px;
   font-weight: 600;
+}
+.image-real {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .item-name {
   flex: 1;

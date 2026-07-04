@@ -7,6 +7,8 @@ import { uploadImage } from '@/api/upload'
 import type { ClothingItem, ClothingCategory } from '@/types/outfit'
 import { categoryLabelMap } from '@/types/outfit'
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
+
 const visible = defineModel<boolean>('visible', { default: false })
 const props = defineProps<{ item: ClothingItem | null }>()
 const emit = defineEmits<{
@@ -82,22 +84,33 @@ watch(() => props.item, (newItem) => {
     formData.occasion = [...newItem.occasion]
     formData.imageUrl = newItem.imageUrl
     formData.note = newItem.note || ''
-    uploadedUrl.value = newItem.imageUrl
+    // 将相对路径转换为完整的URL
+    uploadedUrl.value = newItem.imageUrl.startsWith('http') 
+      ? newItem.imageUrl 
+      : `${BASE_URL}${newItem.imageUrl}`
   }
 }, { immediate: true })
 
-async function handleUpload({ file }: { file: UploadFileInfo }) {
-  if (!file.file) return
+async function handleUpload({ file, onFinish, onError }: { file: UploadFileInfo; onFinish: () => void; onError: () => void }) {
+  if (!file.file) {
+    onError()
+    return
+  }
 
   uploading.value = true
   try {
     const result = await uploadImage(file.file)
-    uploadedUrl.value = result.url
+    // 将相对路径转换为完整的URL用于预览
+    uploadedUrl.value = result.url.startsWith('http') 
+      ? result.url 
+      : `${BASE_URL}${result.url}`
     formData.imageUrl = result.url
     message.success('图片上传成功')
+    onFinish()
   } catch (error) {
     message.error('图片上传失败')
     console.error('Upload failed:', error)
+    onError()
   } finally {
     uploading.value = false
   }
