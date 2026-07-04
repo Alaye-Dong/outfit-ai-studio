@@ -1,0 +1,272 @@
+[
+  {
+    "id": "item_001",
+    "name": "棕色格纹夹克",
+    "category": "outerwear",
+    "color": "棕色",
+    "season": ["秋季", "冬季"],
+    "occasion": ["日常", "通勤"],
+    "imageUrl": "/uploads/plaid-jacket.png",
+    "note": "复古格纹，宽松版型"
+  },
+  {
+    "id": "item_002",
+    "name": "灰色长款半身裙",
+    "category": "bottom",
+    "color": "灰色",
+    "season": ["春季", "秋季"],
+    "occasion": ["日常", "通勤"],
+    "imageUrl": "/uploads/grey-skirt.png",
+    "note": "长款垂坠感半裙"
+  },
+  {
+    "id": "item_003",
+    "name": "黑色厚底鞋",
+    "category": "shoes",
+    "color": "黑色",
+    "season": ["春季", "秋季", "冬季"],
+    "occasion": ["日常", "街头"],
+    "imageUrl": "/uploads/black-shoes.png",
+    "note": "黑色厚底休闲鞋"
+  },
+  {
+    "id": "item_004",
+    "name": "红色棉服外套",
+    "category": "outerwear",
+    "color": "红色",
+    "season": ["冬季"],
+    "occasion": ["日常", "户外"],
+    "imageUrl": "/uploads/red-puffer.png",
+    "note": "短款棉服"
+  },
+  {
+    "id": "item_005",
+    "name": "白色针织上衣",
+    "category": "top",
+    "color": "白色",
+    "season": ["秋季", "冬季"],
+    "occasion": ["日常", "通勤"],
+    "imageUrl": "/uploads/white-knit-top.png",
+    "note": "基础款针织内搭"
+  },
+  {
+    "id": "item_006",
+    "name": "蓝色牛仔裤",
+    "category": "bottom",
+    "color": "蓝色",
+    "season": ["春季", "夏季", "秋季"],
+    "occasion": ["日常", "休闲"],
+    "imageUrl": "/uploads/blue-jeans.png",
+    "note": "经典直筒牛仔裤"
+  },
+  {
+    "id": "item_007",
+    "name": "黑色手提包",
+    "category": "bag",
+    "color": "黑色",
+    "season": ["春季", "夏季", "秋季", "冬季"],
+    "occasion": ["日常", "通勤", "约会"],
+    "imageUrl": "/uploads/black-handbag.png",
+    "note": "简约通勤手提包"
+  },
+  {
+    "id": "item_008",
+    "name": "银色项链",
+    "category": "accessory",
+    "color": "银色",
+    "season": ["春季", "夏季", "秋季", "冬季"],
+    "occasion": ["日常", "约会", "派对"],
+    "imageUrl": "/uploads/silver-necklace.png",
+    "note": "精致细链项链"
+  },
+  {
+    "id": "item_009",
+    "name": "米色风衣",
+    "category": "outerwear",
+    "color": "米色",
+    "season": ["春季", "秋季"],
+    "occasion": ["日常", "通勤"],
+    "imageUrl": "/uploads/beige-trench.png",
+    "note": "经典卡其色风衣"
+  },
+  {
+    "id": "item_010",
+    "name": "黑色高领毛衣",
+    "category": "top",
+    "color": "黑色",
+    "season": ["秋季", "冬季"],
+    "occasion": ["日常", "通勤"],
+    "imageUrl": "/uploads/black-turtleneck.png",
+    "note": "修身高领打底"
+  },
+  {
+    "id": "item_011",
+    "name": "白色运动鞋",
+    "category": "shoes",
+    "color": "白色",
+    "season": ["春季", "夏季", "秋季"],
+    "occasion": ["日常", "运动", "休闲"],
+    "imageUrl": "/uploads/white-sneakers.png",
+    "note": "百搭小白鞋"
+  },
+  {
+    "id": "item_012",
+    "name": "棕色皮带",
+    "category": "accessory",
+    "color": "棕色",
+    "season": ["春季", "夏季", "秋季", "冬季"],
+    "occasion": ["日常", "通勤"],
+    "imageUrl": "/uploads/brown-belt.png",
+    "note": "经典真皮皮带"
+  },
+  {
+    "id": "item_013",
+    "name": "碎花连衣裙",
+    "category": "dress",
+    "color": "粉色",
+    "season": ["春季", "夏季"],
+    "occasion": ["日常", "约会", "度假"],
+    "imageUrl": "/uploads/floral-dress.png",
+    "note": "浪漫碎花长裙"
+  },
+  {
+    "id": "item_014",
+    "name": "黑色西装外套",
+    "category": "outerwear",
+    "color": "黑色",
+    "season": ["春季", "秋季", "冬季"],
+    "occasion": ["通勤", "商务"],
+    "imageUrl": "/uploads/black-blazer.png",
+    "note": "修身西装外套"
+  },
+  {
+    "id": "item_015",
+    "name": "白色T恤",
+    "category": "top",
+    "color": "白色",
+    "season": ["春季", "夏季", "秋季"],
+    "occasion": ["日常", "休闲"],
+    "imageUrl": "/uploads/white-tshirt.png",
+    "note": "基础款纯棉T恤"
+  },
+  {
+    "id": "item_016",
+    "name": "卡其色休闲裤",
+    "category": "bottom",
+    "color": "卡其色",
+    "season": ["春季", "夏季", "秋季"],
+    "occasion": ["日常", "休闲"],
+    "imageUrl": "/uploads/khaki-pants.png",
+    "note": "舒适休闲裤"
+  },
+  {
+    "id": "item_017",
+    "name": "棕色短靴",
+    "category": "shoes",
+    "color": "棕色",
+    "season": ["秋季", "冬季"],
+    "occasion": ["日常", "通勤"],
+    "imageUrl": "/uploads/brown-boots.png",
+    "note": "复古切尔西靴"
+  },
+  {
+    "id": "item_018",
+    "name": "帆布托特包",
+    "category": "bag",
+    "color": "米色",
+    "season": ["春季", "夏季", "秋季"],
+    "occasion": ["日常", "休闲", "购物"],
+    "imageUrl": "/uploads/canvas-tote.png",
+    "note": "大容量帆布包"
+  },
+  {
+    "id": "item_019",
+    "name": "金色耳环",
+    "category": "accessory",
+    "color": "金色",
+    "season": ["春季", "夏季", "秋季", "冬季"],
+    "occasion": ["日常", "约会", "派对"],
+    "imageUrl": "/uploads/gold-earrings.png",
+    "note": "简约圆形耳环"
+  },
+  {
+    "id": "item_020",
+    "name": "黑色铅笔裙",
+    "category": "bottom",
+    "color": "黑色",
+    "season": ["春季", "夏季", "秋季", "冬季"],
+    "occasion": ["通勤", "商务"],
+    "imageUrl": "/uploads/black-pencil-skirt.png",
+    "note": "修身职业半裙"
+  },
+  {
+    "id": "item_021",
+    "name": "牛仔外套",
+    "category": "outerwear",
+    "color": "蓝色",
+    "season": ["春季", "秋季"],
+    "occasion": ["日常", "休闲", "街头"],
+    "imageUrl": "/uploads/denim-jacket.png",
+    "note": "经典牛仔夹克"
+  },
+  {
+    "id": "item_022",
+    "name": "条纹衬衫",
+    "category": "top",
+    "color": "蓝白",
+    "season": ["春季", "夏季", "秋季"],
+    "occasion": ["日常", "通勤", "休闲"],
+    "imageUrl": "/uploads/striped-shirt.png",
+    "note": "法式条纹衬衫"
+  },
+  {
+    "id": "item_023",
+    "name": "红色高跟鞋",
+    "category": "shoes",
+    "color": "红色",
+    "season": ["春季", "夏季", "秋季"],
+    "occasion": ["约会", "派对", "通勤"],
+    "imageUrl": "/uploads/red-heels.png",
+    "note": "尖头细跟高跟鞋"
+  },
+  {
+    "id": "item_024",
+    "name": "黑色链条包",
+    "category": "bag",
+    "color": "黑色",
+    "season": ["春季", "夏季", "秋季", "冬季"],
+    "occasion": ["日常", "约会", "派对"],
+    "imageUrl": "/uploads/black-chain-bag.png",
+    "note": "时尚链条单肩包"
+  },
+  {
+    "id": "item_025",
+    "name": "丝巾",
+    "category": "accessory",
+    "color": "多色",
+    "season": ["春季", "夏季", "秋季"],
+    "occasion": ["日常", "通勤", "约会"],
+    "imageUrl": "/uploads/silk-scarf.png",
+    "note": "印花丝巾"
+  },
+  {
+    "id": "item_026",
+    "name": "黑色小礼服",
+    "category": "dress",
+    "color": "黑色",
+    "season": ["春季", "夏季", "秋季", "冬季"],
+    "occasion": ["约会", "派对", "商务"],
+    "imageUrl": "/uploads/black-little-dress.png",
+    "note": "经典小黑裙"
+  },
+  {
+    "id": "item_027",
+    "name": "蓝色牛仔连衣裙",
+    "category": "dress",
+    "color": "蓝色",
+    "season": ["春季", "夏季"],
+    "occasion": ["日常", "休闲", "度假"],
+    "imageUrl": "/uploads/denim-dress.png",
+    "note": "休闲牛仔背带裙"
+  }
+]
