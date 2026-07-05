@@ -77,9 +77,11 @@ function onDrop(event: DragEvent) {
         <div class="item-image">
           <img v-if="hasImage(item)" :src="getImageUrl(item)" :alt="item.name" class="image-real" />
           <div v-else class="image-placeholder">{{ item.name.charAt(0) }}</div>
+          <button class="remove-btn" @click="handleRemove(item.id)">×</button>
         </div>
-        <span class="item-name">{{ item.name }}</span>
-        <button class="remove-btn" @click="handleRemove(item.id)">×</button>
+        <div class="item-info">
+          <span class="item-name" :title="item.name">{{ item.name }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -91,6 +93,7 @@ function onDrop(event: DragEvent) {
   flex-direction: column;
   gap: var(--gap-sm);
 }
+
 .slot-label {
   font-size: 13px;
   font-weight: 500;
@@ -98,6 +101,7 @@ function onDrop(event: DragEvent) {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
 .slot-content {
   min-height: 120px;
   border: 2px dashed var(--color-border);
@@ -117,28 +121,41 @@ function onDrop(event: DragEvent) {
     border-color: var(--color-primary);
   }
 }
+
 .slot-empty {
   color: var(--color-muted);
   font-size: 13px;
   text-align: center;
 }
+
 .slot-item {
   display: flex;
-  align-items: center;
-  gap: var(--gap-sm);
-  padding: var(--gap-sm);
-  background: var(--color-bg);
-  border-radius: var(--radius-sm);
-  position: relative;
-}
-.item-image {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-sm);
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
   overflow: hidden;
-  flex-shrink: 0;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
 }
+
+.item-image {
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%; /* 1:1 宽高比 */
+  position: relative;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
 .image-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   display: flex;
@@ -146,22 +163,23 @@ function onDrop(event: DragEvent) {
   justify-content: center;
   background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-bg) 100%);
   color: var(--color-primary);
-  font-size: 16px;
+  font-size: 24px;
   font-weight: 600;
 }
+
 .image-real {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.item-name {
-  flex: 1;
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+
 .remove-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
   width: 24px;
   height: 24px;
   border: none;
@@ -172,11 +190,31 @@ function onDrop(event: DragEvent) {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 1;
   
   &:hover {
-    opacity: 0.8;
+    background: #c94444;
   }
+}
+
+.slot-item:hover .remove-btn {
+  opacity: 1;
+}
+
+.item-info {
+  padding: var(--gap-sm);
+}
+
+.item-name {
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 </style>

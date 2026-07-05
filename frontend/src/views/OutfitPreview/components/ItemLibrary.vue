@@ -105,15 +105,13 @@ function onDragStart(event: DragEvent, item: ClothingItem) {
     <div class="library-content">
       <n-spin :show="loading">
         <div class="item-list">
-          <div
+          <ItemCard 
             v-for="item in filteredItems"
             :key="item.id"
-            class="draggable-item"
-            draggable="true"
+            :item="item"
+            @edit="handleEditItem"
             @dragstart="onDragStart($event, item)"
-          >
-            <ItemCard :item="item" @edit="handleEditItem" />
-          </div>
+          />
         </div>
       </n-spin>
     </div>
@@ -132,27 +130,32 @@ function onDragStart(event: DragEvent, item: ClothingItem) {
   flex-direction: column;
   height: 100%;
 }
+
 .library-header {
   padding: var(--gap-md);
   border-bottom: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
   h3 {
     margin: 0;
     font-size: 16px;
     font-weight: 600;
   }
+  
   .header-actions {
     display: flex;
     align-items: center;
     gap: var(--gap-sm);
   }
+  
   .item-count {
     font-size: 12px;
     color: var(--color-muted);
   }
 }
+
 .library-filters {
   padding: var(--gap-sm) var(--gap-md);
   display: flex;
@@ -160,20 +163,22 @@ function onDragStart(event: DragEvent, item: ClothingItem) {
   gap: var(--gap-sm);
   border-bottom: 1px solid var(--color-border);
 }
+
 .library-content {
   flex: 1;
   overflow-y: auto;
   padding: var(--gap-sm);
 }
+
 .item-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-sm);
+  columns: 2;
+  column-gap: var(--gap-sm);
 }
-.draggable-item {
-  cursor: grab;
-  &:active {
-    cursor: grabbing;
+
+/* 响应式列数 - 左侧面板宽度有限，保持2列 */
+@media (min-width: 400px) {
+  .item-list {
+    columns: 2;
   }
 }
 </style>
